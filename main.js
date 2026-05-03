@@ -20,19 +20,69 @@ if (import.meta.env && import.meta.env.VITE_FIREBASE_API_KEY) {
     console.warn("Analytics error:", e);
   }
 }
+const params = new URLSearchParams(window.location.search);
 
+if (params.get('autoplay') === 'split') {
+    const asmrFile = params.get('asmr');
+    if (asmrFile) {
+        const vid = document.createElement('video');
+        vid.src = `/asmr/${asmrFile}`;
+        vid.autoplay = true;
+        vid.loop = true;
+        vid.muted = true;
+        vid.style.position = 'absolute';
+        vid.style.bottom = '0';
+        vid.style.left = '0';
+        vid.style.width = '100%';
+        vid.style.height = '50%';
+        vid.style.objectFit = 'cover';
+        document.body.appendChild(vid);
+    }
+    
+    const banner = document.createElement('div');
+    banner.innerText = "Nomisekili from Oops-games";
+    banner.style.position = 'absolute';
+    banner.style.top = '50%';
+    banner.style.left = '50%';
+    banner.style.transform = 'translate(-50%, -50%)';
+    banner.style.background = 'rgba(0, 0, 0, 0.85)';
+    banner.style.color = '#fde047';
+    banner.style.padding = '12px 24px';
+    banner.style.borderRadius = '12px';
+    banner.style.border = '2px solid #b45309';
+    banner.style.fontFamily = 'system-ui, -apple-system, sans-serif';
+    banner.style.fontWeight = '800';
+    banner.style.fontSize = '28px';
+    banner.style.zIndex = '1000';
+    banner.style.whiteSpace = 'nowrap';
+    banner.style.boxShadow = '0 4px 15px rgba(0,0,0,0.5)';
+    banner.style.textShadow = '1px 1px 2px rgba(0,0,0,0.8)';
+    document.body.appendChild(banner);
+}
 // Fixed Resolution Scaling Logic
 function resizeCanvas() {
   const container = document.getElementById('game-container');
   const LOGICAL_WIDTH = 450;
   const LOGICAL_HEIGHT = 800; 
 
+  let effectiveHeight = window.innerHeight;
+  if (params.get('autoplay') === 'split') {
+      effectiveHeight = window.innerHeight / 2;
+  }
   const scaleWidth = window.innerWidth / LOGICAL_WIDTH;
-  const scaleHeight = window.innerHeight / LOGICAL_HEIGHT;
+  const scaleHeight = effectiveHeight / LOGICAL_HEIGHT;
   const scale = Math.min(scaleWidth, scaleHeight);
 
   container.style.transform = `scale(${scale})`;
   container.style.transformOrigin = 'center center';
+  
+  if (params.get('autoplay') === 'split') {
+      container.style.position = 'absolute';
+      container.style.top = '25%';
+      container.style.left = '50%';
+      container.style.marginLeft = `-${LOGICAL_WIDTH / 2}px`;
+      container.style.marginTop = `-${LOGICAL_HEIGHT / 2}px`;
+  }
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
@@ -339,6 +389,7 @@ function startGame() {
   startTime = Date.now();
   accumulatedPauseTime = 0;
   currentInterval = 3000;
+  if (params.get('autoplay') === 'split') currentInterval = 500;
   pausesEarned = 0;
   nextPauseThreshold = 20;
   sequenceQueue = [];
@@ -445,8 +496,6 @@ document.getElementById('btn-embed-hook')?.addEventListener('click', () => {
     window.open('https://oops-games-hub.web.app/', '_blank');
 });
 
-// URL Parameters
-const params = new URLSearchParams(window.location.search);
 if (params.get('mode') === 'embed') {
   if (analytics) logEvent(analytics, 'embed_visit', { game_id: 'NIM' });
   document.getElementById('standard-buttons').classList.add('hidden');
