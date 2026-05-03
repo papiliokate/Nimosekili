@@ -46,7 +46,7 @@ jobs:
         run: npm run build
 
       - name: Deploy to Firebase Hosting
-        run: npx firebase-tools deploy --only hosting:nomisekili --project go-rabbit-4af82 --token "${{ secrets.FIREBASE_TOKEN }}"
+        run: npx firebase-tools deploy --only hosting:nimosekili --project go-rabbit-4af82 --token "${{ secrets.FIREBASE_TOKEN }}"
 
       - name: Ping Zapier Webhook
         run: |
