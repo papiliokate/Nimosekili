@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Nomisekili - Fast Fingers Daily Puzzle Game | Oops-Games</title>
+    <meta name="description" content="Challenge your brain with Nomisekili, a daily logic puzzle game. Play for free directly in your browser on Oops-Games." />
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <div id="game-container">
+      <div id="ui-layer">
+        <div class="header">
+          <div class="score">Score: <span id="score-val">0</span></div>
+          <div class="time">Time: <span id="time-val">0</span>s</div>
+        </div>
+        <div class="message" id="message">
+          <h1 id="title" style="margin:0; font-size: 24px; text-shadow: 2px 2px 0 #000; color: #fff;">Nomisekili</h1>
+          <h3 id="branding" style="margin: 5px 0; font-size: 10px; color: #ccc; letter-spacing: 1px;">oops-games.com</h3>
+          <button id="tutorial-btn">❓ How to Play</button>
+        </div>
+        
+        <div id="flower-grid">
+          <!-- Flowers will be injected here -->
+        </div>
+
+        <div class="footer">
+          <button id="pause-btn" disabled>Pause (0)</button>
+        </div>
+        <div id="game-over" class="hidden" style="position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:200; display:flex; justify-content:center; align-items:center;">
+          <div class="modal-content">
+            <h2 id="game-over-title">Game Over</h2>
+            <p>You survived <span id="final-time">0</span> seconds.</p>
+            <p id="vic-cypher" style="color: #c92a2a; font-weight: bold; margin-bottom: 15px;"></p>
+            
+            <div id="standard-buttons">
+              <button id="restart-btn" class="hidden" style="width: 100%; margin-bottom: 10px; font-size: 10px;">Play Again</button>
+              <button id="btn-install" style="width: 100%; margin-bottom: 10px; background: #1c7ed6; font-size: 10px;">📲 Add to Device</button>
+              <button id="btn-share" style="width: 100%; margin-bottom: 10px; background: #e91e63; font-size: 10px;">📤 Brag</button>
+              <button id="btn-binge" style="width: 100%; margin-bottom: 10px; background: #f8cc1b; color: #000; font-size: 10px;">🎟️ Binge Mode</button>
+              <button id="btn-hub" style="width: 100%; background: #4CAF50; font-size: 10px;">🎮 Go to Games Hub</button>
+            </div>
+            
+            <div id="carousel-buttons" class="hidden">
+              <button id="btn-next" style="width: 100%; margin-bottom: 10px; font-size: 10px;">➡️ Play next game</button>
+              <button id="btn-share-carousel" class="hidden" style="width: 100%; margin-bottom: 10px; background: #e91e63; font-size: 10px;">📤 Share for another ride</button>
+              <button id="btn-binge-carousel" style="width: 100%; background: #f8cc1b; color: #000; font-size: 10px;">🎟️ Binge this game</button>
+            </div>
+            
+            <div id="embed-buttons" class="hidden">
+              <p id="embed-hook-text" style="font-size: 12px; margin-bottom: 15px; color: #000; font-weight: bold;">Can you break 60 seconds?</p>
+              <button id="btn-embed-hook" style="background: #e91e63; color: white; width: 100%; font-size: 12px; padding: 15px;">🚀 Play Full Game on Oops-Games</button>
+            </div>
+          </div>
+        </div>
+        <div id="start-overlay">
+          <button id="start-btn">Start Game</button>
+        </div>
+
+        <div id="ios-install-modal" class="hidden" style="position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:300; display:flex; justify-content:center; align-items:center;">
+          <div class="modal-content">
+            <h2 style="color: #4CAF50;">Free Binge Token!</h2>
+            <p style="font-size: 1.2rem; line-height: 1.5; color: #333;">
+              Apple doesn't let us install apps automatically. 😢<br><br>
+              But if you tap the <strong>Share</strong> icon below, and then <strong>Add to Home Screen</strong>, we'll give you a free Binge Token when you open the app!
+            </p>
+            <div style="margin-top: 20px;">
+                <button id="btn-close-ios-modal" style="background: #4CAF50; width: 100%;">Got it!</button>
+            </div>
+          </div>
+        </div>
+        
+        <div id="tutorial-modal" class="hidden">
+          <div class="modal-content">
+            <h2>How to Play</h2>
+            <p>Tap the lit daisies before the next one lights up.</p>
+            <p>Every 20 seconds you survive, you earn a Breather!</p>
+            <p>Use Breathers to slow the game down.</p>
+            <p style="color: #c92a2a; font-size: 16px;"><strong>How long can you survive?</strong></p>
+            <button id="btn-close-tutorial">Got it!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/main.js"></script>
+    <script src="/streak_manager.js"></script>
+</body>
+</html>
