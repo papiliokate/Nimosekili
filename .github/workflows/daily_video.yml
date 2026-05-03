@@ -1,10 +1,8 @@
 name: Daily Video Generation
 
 on:
-  schedule:
-    - cron: '40 9 * * *'
-    - cron: '10 18 * * *'
-    - cron: '10 22 * * *'
+  repository_dispatch:
+    types: [generate-daily-video]
   workflow_dispatch:
 
 jobs:
@@ -20,84 +18,37 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-
-      - name: Decentralized Election
-        id: election
+      - name: Randomize Video Format
         run: |
-          ELECTION=$(node -e "
-            const crypto = require('crypto');
-            const d = new Date();
-            const dateStr = d.toISOString().split('T')[0];
-            const h = d.getUTCHours();
-            
-            let slotIndex = 2; // Default to slot3
-            if (h >= 8 && h < 12) slotIndex = 0;
-            else if (h >= 16 && h < 20) slotIndex = 1;
-          
-            function mulberry32(a) {
-              return function() {
-                var t = a += 0x6D2B79F5;
-                t = Math.imul(t ^ t >>> 15, t | 1);
-                t ^= t + Math.imul(t ^ t >>> 7, t | 61);
-                return ((t ^ t >>> 14) >>> 0) / 4294967296;
-              }
-            }
-          
-            const hash = crypto.createHash('md5').update(dateStr).digest('hex');
-            const seedNum = parseInt(hash.substring(0, 8), 16);
-            const rng = mulberry32(seedNum);
-          
-            const games = [0, 1, 2, 3];
-            for (let i = games.length - 1; i > 0; i--) {
-              const j = Math.floor(rng() * (i + 1));
-              [games[i], games[j]] = [games[j], games[i]];
-            }
-          
-            console.log(games[slotIndex]);
-          ")
-          echo "Elected Repo ID: $ELECTION"
-          
-          # Nomisekili is ID 3
-          if [ "$ELECTION" -ne 3 ]; then
-            echo "Not elected for this slot. Exiting gracefully."
-            echo "proceed=false" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          echo "proceed=true" >> $GITHUB_OUTPUT
-          
           FORMATS=("standard" "fail" "interactive")
           SELECTED_FORMAT=${FORMATS[$(( $RANDOM % 3 ))]}
           echo "Selected Format: $SELECTED_FORMAT"
           echo "FORMAT=$SELECTED_FORMAT" >> $GITHUB_ENV
 
+
+
       - name: Install dependencies
-        if: steps.election.outputs.proceed == 'true'
         run: |
           npm ci --legacy-peer-deps || npm install --legacy-peer-deps
           
       - name: Install Puppeteer System Libraries
-        if: steps.election.outputs.proceed == 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y libgbm-dev xvfb ffmpeg
           npx puppeteer browsers install chrome
 
       - name: Generate Video
-        if: steps.election.outputs.proceed == 'true'
         run: xvfb-run --auto-servernum --server-args="-screen 0 450x800x24" node scripts/generate_video.js
         env:
           HEADLESS: "false"
 
       - name: Build Application
-        if: steps.election.outputs.proceed == 'true'
         run: npm run build
 
       - name: Deploy to Firebase Hosting
-        if: steps.election.outputs.proceed == 'true'
         run: npx firebase-tools deploy --only hosting:nomisekili --project go-rabbit-4af82 --token "${{ secrets.FIREBASE_TOKEN }}"
 
       - name: Ping Zapier Webhook
-        if: steps.election.outputs.proceed == 'true'
         run: |
           CAPTIONS=(
             "Can you survive the memory game? 🌼 Play free at oops-games.com"
