@@ -203,13 +203,15 @@ async function main() {
                 cmd.input(asmrFile).inputOptions(['-stream_loop', '-1'])
                    .input(relaxFile).inputOptions(['-stream_loop', '-1'])
                    .complexFilter([
+                       '[1:v]scale=720:640:force_original_aspect_ratio=increase,crop=720:640[asmr_v]',
+                       '[0:v][asmr_v]overlay=0:640[v_out]',
                        '[1:a]volume=0.5[asmr_audio]',
                        '[2:a]volume=0.5[relax_audio]',
                        '[asmr_audio][relax_audio]amix=inputs=2:duration=first:dropout_transition=3[audio_out]'
                    ])
                    .outputOptions([
                        '-y',
-                       '-map 0:v',
+                       '-map [v_out]',
                        '-map [audio_out]',
                        '-c:v libx264',
                        '-pix_fmt yuv420p',
