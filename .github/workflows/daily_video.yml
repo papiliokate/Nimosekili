@@ -35,7 +35,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libgbm-dev xvfb ffmpeg
-          npx puppeteer browsers install chrome
 
       - name: Generate Video
         run: xvfb-run --auto-servernum --server-args="-screen 0 450x800x24" node scripts/generate_video.js
