@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "nimosekili",
+    "site": "nomisekili",
     "public": "dist",
     "ignore": [
       "firebase.json",
