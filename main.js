@@ -20,8 +20,15 @@ if (import.meta.env && import.meta.env.VITE_FIREBASE_API_KEY) {
     console.warn("Analytics error:", e);
   }
 }
-const params = new URLSearchParams(window.location.search);
 
+let publisherDomain = 'unknown';
+if (document.referrer) {
+    try {
+        publisherDomain = new URL(document.referrer).hostname;
+    } catch(e) {}
+}
+
+const params = new URLSearchParams(window.location.search);
 if (params.get('autoplay') === 'split') {
     const asmrFile = params.get('asmr');
     if (asmrFile) {
@@ -238,7 +245,11 @@ function gameOver() {
   document.getElementById('vic-cypher').innerText = getDailyCypher(3);
   gameOverOverlay.classList.remove('hidden');
   
-  if (analytics) logEvent(analytics, 'level_complete', { time_survived: survived, score: score });
+  if (analytics) {
+      let eventParams = { time_survived: survived, score: score };
+      if (params.get('mode') === 'embed') eventParams.publisher_domain = publisherDomain;
+      logEvent(analytics, 'level_complete', eventParams);
+  }
   
   window._VIDEO_RECORDING_DONE = true;
 }
@@ -497,7 +508,7 @@ document.getElementById('btn-embed-hook')?.addEventListener('click', () => {
 });
 
 if (params.get('mode') === 'embed') {
-  if (analytics) logEvent(analytics, 'embed_visit', { game_id: 'NIM' });
+  if (analytics) logEvent(analytics, 'embed_visit', { game_id: 'NIM', publisher_domain: publisherDomain });
   document.getElementById('standard-buttons').classList.add('hidden');
   document.getElementById('carousel-buttons').classList.add('hidden');
   const embedBtns = document.getElementById('embed-buttons');
