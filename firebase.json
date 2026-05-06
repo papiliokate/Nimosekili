@@ -24,16 +24,7 @@
         ]
       },
       {
-        "source": "/asmr/**",
-        "headers": [
-          {
-            "key": "X-Robots-Tag",
-            "value": "noindex"
-          }
-        ]
-      },
-      {
-        "source": "/relaxing_audio/**",
+        "source": "/**",
         "headers": [
           {
             "key": "X-Robots-Tag",
