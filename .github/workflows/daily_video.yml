@@ -40,6 +40,7 @@ jobs:
         run: xvfb-run --auto-servernum --server-args="-screen 0 450x800x24" node scripts/generate_video.js
         env:
           HEADLESS: "false"
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       - name: Build Application
         run: npm run build
@@ -69,3 +70,4 @@ jobs:
           https://hooks.zapier.com/hooks/catch/27231889/ujm5mjh/ || exit 1
           
           echo "Deployed public video and pinged Zapier!"
+
