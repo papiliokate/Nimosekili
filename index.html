@@ -5,6 +5,13 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Nomisekili - Fast Fingers Daily Puzzle Game | Oops-Games</title>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('mode') === 'captcha' || params.get('mode') === 'embed' || params.get('client_id')) {
+        window.location.replace('./conversion.html' + window.location.search);
+    }
+  </script>
+
     <meta name="description" content="Challenge your brain with Nomisekili, a daily logic puzzle game. Play for free directly in your browser on Oops-Games." />
     <link rel="stylesheet" href="/style.css">
   </head>
@@ -18,7 +25,8 @@
         <div class="message" id="message">
           <h1 id="title" style="margin:0; font-size: 24px; text-shadow: 2px 2px 0 #000; color: #fff;">Nomisekili</h1>
           <h3 id="branding" style="margin: 5px 0; font-size: 10px; color: #ccc; letter-spacing: 1px;">oops-games.com</h3>
-          <button id="tutorial-btn">❓ How to Play</button>
+          <button id="header-carousel-next" class="btn-header" style="pointer-events: auto !important; display: none; background: linear-gradient(135deg, #00f0ff, #0055ff); color: white; border: none; cursor: pointer; font-weight: bold; padding: 5px 10px; border-radius: 12px; margin-left: 10px;">➡️ Next Game</button>
+        <button id="tutorial-btn">❓ How to Play</button>
         </div>
         
         <div id="flower-grid">
@@ -43,15 +51,12 @@
             </div>
             
             <div id="carousel-buttons" class="hidden">
-              <button id="btn-next" style="width: 100%; margin-bottom: 10px; font-size: 10px;">➡️ Play next game</button>
+              <button id="carousel-play-next" style="width: 100%; margin-bottom: 10px; font-size: 10px;">➡️ Play next game</button>
               <button id="btn-share-carousel" class="hidden" style="width: 100%; margin-bottom: 10px; background: #e91e63; font-size: 10px;">📤 Share for another ride</button>
               <button id="btn-binge-carousel" style="width: 100%; background: #f8cc1b; color: #000; font-size: 10px;">🎟️ Binge this game</button>
             </div>
             
-            <div id="embed-buttons" class="hidden">
-              <p id="embed-hook-text" style="font-size: 12px; margin-bottom: 15px; color: #000; font-weight: bold;">Can you break 60 seconds?</p>
-              <button id="btn-embed-hook" style="background: #e91e63; color: white; width: 100%; font-size: 12px; padding: 15px;">🚀 Play Full Game on Oops-Games</button>
-            </div>
+            
           </div>
         </div>
         <div id="start-overlay">
@@ -85,5 +90,7 @@
     </div>
     <script type="module" src="/main.js"></script>
     <script src="/streak_manager.js"></script>
+  <script src="/carousel_manager.js"></script>
 </body>
 </html>
+
