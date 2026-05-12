@@ -1,5 +1,6 @@
 import './style.css';
-import { initializeApp, getAnalytics, logEvent } from "./analytics_wrapper.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
 
 let analytics;
 if (import.meta.env && import.meta.env.VITE_FIREBASE_API_KEY) {
@@ -418,7 +419,7 @@ function startGame() {
 }
 
 startBtn.addEventListener('click', () => {
-  if (analytics) logEvent(analytics, 'custom_session_start');
+  if (analytics) logEvent(analytics, 'session_start');
   startGame();
 });
 restartBtn.addEventListener('click', startGame);
@@ -475,7 +476,26 @@ document.getElementById('btn-hub')?.addEventListener('click', () => {
     window.location.href = 'https://oops-games.com';
 });
 
-
+// Carousel Listeners
+document.getElementById('btn-next')?.addEventListener('click', async () => {
+  const playedGamesStr = params.get('played') || '';
+  let currentPlayed = playedGamesStr ? playedGamesStr.split(',').filter(Boolean) : [];
+  if (!currentPlayed.includes('NIM')) currentPlayed.push('NIM');
+  
+  try {
+      const res = await fetch('https://oops-games.com/carousel_config.json');
+      const configList = await res.json();
+      const unplayed = configList.filter(g => !currentPlayed.includes(g.id));
+      if (unplayed.length > 0) {
+          const nextGame = unplayed[Math.floor(Math.random() * unplayed.length)];
+          window.location.href = `${nextGame.url}?carousel=true&played=${currentPlayed.join(',')}`;
+      } else {
+          window.location.href = 'https://oops-games.com/';
+      }
+  } catch(e) {
+      window.location.href = 'https://oops-games.com/';
+  }
+});
 document.getElementById('btn-binge-carousel')?.addEventListener('click', () => {
     if (analytics) logEvent(analytics, 'binge_presale_click');
     window.location.href = 'https://oops-games.com/presale.html?carousel=true';
@@ -544,4 +564,3 @@ if (params.get('autoplay')) {
 }
 
 createGrid();
-
