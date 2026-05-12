@@ -21,12 +21,7 @@ if (import.meta.env && import.meta.env.VITE_FIREBASE_API_KEY) {
   }
 }
 
-let publisherDomain = 'unknown';
-if (document.referrer) {
-    try {
-        publisherDomain = new URL(document.referrer).hostname;
-    } catch(e) {}
-}
+
 
 const params = new URLSearchParams(window.location.search);
 if (params.get('autoplay') === 'split') {
@@ -239,15 +234,13 @@ function gameOver() {
   const now = Date.now();
   const survived = Math.floor((now - startTime - accumulatedPauseTime) / 1000);
   document.getElementById('final-time').innerText = survived;
-  const embedFinalTime = document.getElementById('embed-final-time');
-  if (embedFinalTime) embedFinalTime.innerText = survived;
   
   document.getElementById('vic-cypher').innerText = getDailyCypher(3);
   gameOverOverlay.classList.remove('hidden');
   
   if (analytics) {
       let eventParams = { time_survived: survived, score: score };
-      if (params.get('mode') === 'embed') eventParams.publisher_domain = publisherDomain;
+
       logEvent(analytics, 'level_complete', eventParams);
   }
   
@@ -501,22 +494,9 @@ document.getElementById('btn-binge-carousel')?.addEventListener('click', () => {
     window.location.href = 'https://oops-games.com/presale.html?carousel=true';
 });
 
-// Embed Listener
-document.getElementById('btn-embed-hook')?.addEventListener('click', () => {
-    if (analytics) logEvent(analytics, 'embed_hook_clicked');
-    window.open('https://oops-games.com/', '_blank');
-});
 
-if (params.get('mode') === 'embed') {
-  if (analytics) logEvent(analytics, 'embed_visit', { game_id: 'NIM', publisher_domain: publisherDomain });
-  document.getElementById('standard-buttons').classList.add('hidden');
-  document.getElementById('carousel-buttons').classList.add('hidden');
-  const embedBtns = document.getElementById('embed-buttons');
-  if (embedBtns) embedBtns.classList.remove('hidden');
-  document.getElementById('vic-cypher').style.display = 'none';
-  const h2 = document.getElementById('game-over-title');
-  if (h2) h2.innerText = "Time's Up!";
-} else if (params.get('carousel') === 'true') {
+
+if (params.get('carousel') === 'true') {
   if (analytics) logEvent(analytics, 'carousel_visit', { game_id: 'NIM' });
   document.getElementById('standard-buttons').classList.add('hidden');
   document.getElementById('carousel-buttons').classList.remove('hidden');

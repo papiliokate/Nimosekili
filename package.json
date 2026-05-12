@@ -10,14 +10,7 @@
         "deploy": "node ../StudioHub/deploy_ecosystem.js"
     },
     "devDependencies": {
-        "@ffmpeg-installer/ffmpeg": "^1.1.0",
-        "fluent-ffmpeg": "^2.1.3",
-        "puppeteer": "^19.0.0",
-        "puppeteer-screen-recorder": "^3.0.6",
         "vite": "^8.0.10"
     },
-    "dependencies": {
-        "@google/generative-ai": "^0.24.1",
-        "node-edge-tts": "^1.2.10"
-    }
+    "dependencies": {}
 }
